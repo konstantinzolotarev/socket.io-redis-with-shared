@@ -9,7 +9,6 @@ var msgpack = require('msgpack-js');
 var Adapter = require('socket.io-adapter');
 var Emitter = require('events').EventEmitter;
 var debug = require('debug')('socket.io-redis');
-var _ = require('lodash');
 
 /**
  * Module exports.
@@ -118,7 +117,7 @@ function adapter(uri, opts){
         if (args[1] && args[1].shared) {
             if (!args[0].data) return;
             //sync shared !
-            _.merge(this.shared, args[0].data);
+            this.shared = args[0].data;
             return;
         }
         args.push(true);
