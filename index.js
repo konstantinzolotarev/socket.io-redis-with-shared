@@ -118,6 +118,7 @@ function adapter(uri, opts){
             if (err) return cb(err);
             try {
                 self.shared.data = JSON.parse(data || '{}');
+                cb();
             } catch(e) {
                 cb(e);
             }
