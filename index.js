@@ -94,7 +94,7 @@ function adapter(uri, opts){
      */
     Redis.prototype.setShared = function() {
         try {
-            pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared));
+            pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared.data || {}));
             this.sync();
         } catch(e) {}
     };
@@ -104,7 +104,7 @@ function adapter(uri, opts){
      */
     Redis.prototype.getShared = function() {
         try {
-            this.shared = JSON.parse(pub.get(GAMEARRAY_KEY) || '{}');
+            this.shared.data = JSON.parse(pub.get(GAMEARRAY_KEY) || '{}');
         } catch(e) {}
     };
 
