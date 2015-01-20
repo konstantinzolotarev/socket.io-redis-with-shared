@@ -91,21 +91,31 @@ function adapter(uri, opts){
 
     /**
      * Will store shared into redis
+     *
+     * @param {function} cb callback
      */
-    Redis.prototype.setShared = function() {
+    Redis.prototype.setShared = function(cb) {
         try {
-            pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared.data || {}));
-            this.sync();
+            pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared.data || {}), function(err) {
+                if(err) return cb(err);
+                this.sync();
+                cb();
+            });
         } catch(e) {}
     };
 
     /**
      * Will fetch shared from redis
+     *
+     * @param {function} cb callback
      */
-    Redis.prototype.getShared = function() {
-        try {
-            this.shared.data = JSON.parse(pub.get(GAMEARRAY_KEY) || '{}');
-        } catch(e) {}
+    Redis.prototype.getShared = function(cb) {
+        pub.get(GAMEARRAY_KEY, function(err, data) {
+            if (err) return cb(err);
+            try {
+                this.shared.data = JSON.parse(data || '{}');
+            } catch(e) {}
+        });
     };
 
     /**
