@@ -101,7 +101,9 @@ function adapter(uri, opts){
                 this.sync();
                 cb();
             });
-        } catch(e) {}
+        } catch(e) {
+            cb(e);
+        }
     };
 
     /**
@@ -114,7 +116,9 @@ function adapter(uri, opts){
             if (err) return cb(err);
             try {
                 this.shared.data = JSON.parse(data || '{}');
-            } catch(e) {}
+            } catch(e) {
+                cb(e);
+            }
         });
     };
 
