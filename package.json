@@ -1,6 +1,6 @@
 {
   "name": "socket.io-redis-with-shared",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "repository": {
     "type": "git",

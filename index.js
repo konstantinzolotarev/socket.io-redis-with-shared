@@ -95,6 +95,7 @@ function adapter(uri, opts){
      * @param {function} cb callback
      */
     Redis.prototype.setShared = function(cb) {
+        cb = cb || function() {};
         var self = this;
         try {
             pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared.data || {}), function(err) {
@@ -113,6 +114,7 @@ function adapter(uri, opts){
      * @param {function} cb callback
      */
     Redis.prototype.getShared = function(cb) {
+        cb = cb || function() {};
         var self = this;
         pub.get(GAMEARRAY_KEY, function(err, data) {
             if (err) return cb(err);
