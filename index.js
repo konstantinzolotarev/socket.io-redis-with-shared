@@ -10,6 +10,11 @@ var Adapter = require('socket.io-adapter');
 var Emitter = require('events').EventEmitter;
 var debug = require('debug')('socket.io-redis');
 
+var Shared = require('./lib/shared');
+
+
+var GAMEARRAY_KEY = 'gameArray:data';
+
 /**
  * Module exports.
  */
@@ -75,7 +80,7 @@ function adapter(uri, opts){
         });
         sub.on('pmessage', this.onmessage.bind(this));
 
-        self.shared = {};
+        self.shared = Shared;
     }
 
     /**
@@ -83,6 +88,25 @@ function adapter(uri, opts){
      */
 
     Redis.prototype.__proto__ = Adapter.prototype;
+
+    /**
+     * Will store shared into redis
+     */
+    Redis.prototype.setShared = function() {
+        try {
+            pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared));
+            this.sync();
+        } catch(e) {}
+    };
+
+    /**
+     * Will fetch shared from redis
+     */
+    Redis.prototype.getShared = function() {
+        try {
+            this.shared = JSON.parse(pub.get(GAMEARRAY_KEY) || '{}');
+        } catch(e) {}
+    };
 
     /**
      * Will sync all objects between all instances
@@ -115,9 +139,8 @@ function adapter(uri, opts){
         }
 
         if (args[1] && args[1].shared) {
-            if (!args[0].data) return;
             //sync shared !
-            this.shared = args[0].data;
+            this.getShared();
             return;
         }
         args.push(true);
