@@ -95,10 +95,11 @@ function adapter(uri, opts){
      * @param {function} cb callback
      */
     Redis.prototype.setShared = function(cb) {
+        var self = this;
         try {
             pub.set(GAMEARRAY_KEY, JSON.stringify(this.shared.data || {}), function(err) {
                 if(err) return cb(err);
-                this.sync();
+                self.sync();
                 cb();
             });
         } catch(e) {
@@ -112,10 +113,11 @@ function adapter(uri, opts){
      * @param {function} cb callback
      */
     Redis.prototype.getShared = function(cb) {
+        var self = this;
         pub.get(GAMEARRAY_KEY, function(err, data) {
             if (err) return cb(err);
             try {
-                this.shared.data = JSON.parse(data || '{}');
+                self.shared.data = JSON.parse(data || '{}');
             } catch(e) {
                 cb(e);
             }
